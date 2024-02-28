@@ -17,6 +17,31 @@ import dj_database_url
 if os.path.isfile("env.py"):
     import env
 
+pip_modules_path = "../.pip-modules"
+lib_path = os.path.join(pip_modules_path, "lib")
+
+if os.path.exists(lib_path) and os.path.isdir(lib_path):
+    print("Contents of", lib_path)
+    for item in os.listdir(lib_path):
+        print(item)
+else:
+    print("The path", lib_path, "does not exist or is not a directory.")
+
+
+directory_path = "./my_directory"
+
+try:
+    if os.path.isdir(directory_path):
+        print("The path", directory_path, "is a directory.")
+    else:
+        raise NotADirectoryError(f"The path {directory_path} is not a directory.")
+except FileNotFoundError as e:
+    print(f"The path {directory_path} does not exist: {e}")
+except NotADirectoryError as e:
+    print(e)
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
@@ -50,6 +75,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'django_summernote',
+    'crispy_forms',
     'blog',
 ]
 
@@ -57,6 +83,8 @@ SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
