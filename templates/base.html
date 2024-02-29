@@ -90,8 +90,15 @@
             let messages = document.getElementById('msg');
             let alert = new bootstrap.Alert(messages);
             alert.close();
-        }, 2000);
+        }, 2500);
+    </script>
+    <script>
+        setLeave_Comment = function (id) {
+            let comment = document.getElementById('comment');
+            comment.value = id;
+        }
     </script>
 </body>
 
 </html>
+
