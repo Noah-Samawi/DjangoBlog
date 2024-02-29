@@ -12,10 +12,35 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 from pathlib import Path
-
 import dj_database_url
+from django.contrib.messages import constants as messages
 if os.path.isfile("env.py"):
     import env
+
+pip_modules_path = "../.pip-modules"
+lib_path = os.path.join(pip_modules_path, "lib")
+
+if os.path.exists(lib_path) and os.path.isdir(lib_path):
+    print("Contents of", lib_path)
+    for item in os.listdir(lib_path):
+        print(item)
+else:
+    print("The path", lib_path, "does not exist or is not a directory.")
+
+
+directory_path = "./my_directory"
+
+try:
+    if os.path.isdir(directory_path):
+        print("The path", directory_path, "is a directory.")
+    else:
+        raise NotADirectoryError(f"The path {directory_path} is not a directory.")
+except FileNotFoundError as e:
+    print(f"The path {directory_path} does not exist: {e}")
+except NotADirectoryError as e:
+    print(e)
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,6 +56,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 ALLOWED_HOSTS = ['software-guys-pp4.herokuapp.com', 'localhost', '127.0.0.1', 'django-blog-pp-e9fa78e1f8b2.herokuapp.com' ]
 
 
@@ -42,12 +69,30 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'cloudinary_storage',
     'django.contrib.staticfiles',
     'cloudinary',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'django_summernote',
+    'crispy_forms',
     'blog',
 ]
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+MESSAGE_TAGS = {
+        messages.DEBUG: 'alert-info',
+        messages.INFO: 'alert-info',
+        messages.SUCCESS: 'alert-success',
+        messages.WARNING: 'alert-warning',
+        messages.ERROR: 'alert-danger',
+    }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,6 +102,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'codestar.urls'
@@ -64,7 +110,7 @@ ROOT_URLCONF = 'codestar.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Update with your template directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,6 +122,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'codestar.wsgi.application'
 
@@ -133,7 +180,11 @@ USE_TZ = True
 
 MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
- 
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
