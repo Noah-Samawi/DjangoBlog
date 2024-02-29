@@ -13,12 +13,14 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
+from urllib.parse import unquote
 from django.contrib.messages import constants as messages
 if os.path.isfile("env.py"):
     import env
 
+
 pip_modules_path = "../.pip-modules"
-lib_path = os.path.join(pip_modules_path, "lib")
+lib_path = os.path.join(pip_modules_path, "lib")  # Corrected
 
 if os.path.exists(lib_path) and os.path.isdir(lib_path):
     print("Contents of", lib_path)
@@ -26,6 +28,7 @@ if os.path.exists(lib_path) and os.path.isdir(lib_path):
         print(item)
 else:
     print("The path", lib_path, "does not exist or is not a directory.")
+
 
 
 directory_path = "./my_directory"
@@ -138,7 +141,7 @@ WSGI_APPLICATION = 'codestar.wsgi.application'
 # }
 
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    'default': dj_database_url.config(default=os.environ.get("DATABASE_URL")),
 }
 
 
